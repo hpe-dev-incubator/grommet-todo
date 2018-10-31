@@ -1,0 +1,15 @@
+{
+  "short_name": "Grommet TODO",
+  "name": "Grommet TODO",
+  "icons": [
+    {
+      "src": "https://v2.grommet.io/img/shortcut-icon.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
