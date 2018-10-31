@@ -79,7 +79,12 @@ class TaskManager extends Component {
     } 
   };
 /* Handler for deleteing tasks based on an array of indexes  */
-  onDelete(status) {
+  onDelete(status, index) {
+    const { array, name } = this.findTaskArrayHandler(status);
+    array.splice(index, 1);
+    this.setState({ [name]: array })
+  }
+  onMultiDelete(status) {
     const { array, name, indexArray, indexArrayName } = this.findTaskArrayHandler(status);
     if(array.length > 0) {
       indexArray.sort((a, b) => b - a);
@@ -135,7 +140,7 @@ class TaskManager extends Component {
         >
           <Box direction="row" >
             <Button icon={<Add />} onClick={this.onLayerOpen.bind(this, 'Unassigned', '', '')}></Button>
-            <Button icon={<FormSubtract />} onClick={this.onDelete.bind(this, 'Unassigned')}></Button>
+            <Button icon={<FormSubtract />} onClick={this.onMultiDelete.bind(this, 'Unassigned')}></Button>
         {/* Unassigned Tasks and edit button  */}
           </Box>
           {unassignedTasks.map((task, index) => 
@@ -153,6 +158,7 @@ class TaskManager extends Component {
               <Paragraph textAlign="center"> {task.text} </Paragraph>
             </Box>
               <Button style={{ padding: 4 }} onClick={this.onLayerOpen.bind(this, 'Unassigned', task.text, index)} icon={<FormEdit />}></Button>
+              <Button style={{ padding: 4 }} onClick={this.onDelete.bind(this, 'Unassigned', index)} icon={<FormSubtract />}></Button>
             </Box>
           )}
         </Box>
@@ -166,7 +172,7 @@ class TaskManager extends Component {
           <Box direction="row">
             <Button icon={ <Add /> } onClick={this.onLayerOpen.bind(this, 'In Progress', '', '')}>
             </Button>
-            <Button icon={<FormSubtract />} onClick={this.onDelete.bind(this, 'In Progress')}></Button>
+            <Button icon={<FormSubtract />} onClick={this.onMultiDelete.bind(this, 'In Progress')}></Button>
         {/* In Progress Tasks and edit button */}
           </Box>
           {inprogressTasks.map((task, index) =>
@@ -184,6 +190,7 @@ class TaskManager extends Component {
               <Paragraph textAlign="center">{task.text}</Paragraph>
             </Box>
               <Button style={{ padding: 4 }} onClick={this.onLayerOpen.bind(this, 'In Progress', task.text, index)} icon={<FormEdit />}></Button>
+              <Button style={{ padding: 4 }} onClick={this.onDelete.bind(this, 'In Progress', index)} icon={<FormSubtract />}></Button>
             </Box>
           )}
         </Box>
@@ -196,7 +203,7 @@ class TaskManager extends Component {
         >
           <Box direction="row">
             <Button icon={<Add />} onClick={ this.onLayerOpen.bind(this, 'Completed', '', '')}></Button>
-            <Button icon={<FormSubtract />} onClick={this.onDelete.bind(this, 'Completed')}></Button>
+            <Button icon={<FormSubtract />} onClick={this.onMultiDelete.bind(this, 'Completed')}></Button>
         {/* Completed Tasks and edit button  */}
           </Box>
           {completedTasks.map((task, index) => 
@@ -214,6 +221,7 @@ class TaskManager extends Component {
               <Paragraph textAlign="center">{task.text}</Paragraph>
             </Box>
               <Button style={{ padding: 4 }} onClick={this.onLayerOpen.bind(this, 'Completed', task.text, index)} icon={<FormEdit />}></Button>
+              <Button style={{ padding: 4 }} onClick={this.onDelete.bind(this, 'Completed', index)} icon={<FormSubtract />}></Button>
             </Box>
           )}
         </Box>
