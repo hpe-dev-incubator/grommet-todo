@@ -1,9 +1,9 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Grommet TODO",
+  "name": "Grommet TODO",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "https://v2.grommet.io/img/shortcut-icon.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     }

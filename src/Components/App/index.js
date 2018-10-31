@@ -9,7 +9,7 @@ class App extends Component {
     return (
       <Grommet theme={grommet}>
         <Box
-          background={{ "color": "background-1" }}
+          background={{ color: "grommet-pink" }}
         >
           <Header />
           <TaskManager />

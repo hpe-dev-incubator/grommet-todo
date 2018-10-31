@@ -42,7 +42,7 @@ class TaskManager extends Component {
   }
 /* Handlers for opening and closing task form modal  */
   onLayerOpen(status, description, index) {
-    let clicked = description !== '' ? true : false;
+    const clicked = description !== ''
 		this.setState({ taskFormModal: true, edit: clicked, dropValue: `${status}`, taskDescription: `${description}`, status: `${status}`, selectedIndex: index});
   };
 	onClose() {
@@ -55,13 +55,13 @@ class TaskManager extends Component {
       if(dropValue === status) {
         const { array, name } = this.findTaskArrayHandler(status);
         array[selectedIndex].text = taskDescription;
-        this.setState({ [`${name}`]: array, edit: false, taskFormModal: false, taskDescription: '' });
+        this.setState({ [name]: array, edit: false, taskFormModal: false, taskDescription: '' });
       }else{
         const task = this.findTaskArrayHandler(status);
         const newTask = this.findTaskArrayHandler(dropValue);
         task.array.splice(selectedIndex, 1);
         newTask.array = [...newTask.array, { text: taskDescription, selected: false, status: status }];
-        this.setState({ [`${task.name}`]: task.array, [`${newTask.name}`]: newTask.array, edit: false, taskFormModal: false, taskDescription: '' });
+        this.setState({ [task.name]: task.array, [newTask.name]: newTask.array, edit: false, taskFormModal: false, taskDescription: '' });
       }
     }
   }
@@ -70,7 +70,7 @@ class TaskManager extends Component {
     if(taskDescription.trim().length > 0) {
       const { array, name } = this.findTaskArrayHandler(dropValue);
       this.setState({
-        [`${name}`]: [...array, { text: taskDescription, selected: false, status: dropValue }],
+        [name]: [...array, { text: taskDescription, selected: false, status: dropValue }],
         taskDescription: '',
         dropValue: '',
         taskFormModal: false
@@ -83,7 +83,7 @@ class TaskManager extends Component {
     if(array.length > 0) {
       indexArray.sort((a, b) => b - a);
       indexArray.map((index) => array.splice(index, 1));
-      this.setState({ [`${name}`]: array,  [`${indexArrayName}`]: [] });
+      this.setState({ [name]: array,  [indexArrayName]: [] });
     }
   };
 /* Handlers that listen for drop down menu changes and text area changes within the New and Edit Task forms  */
@@ -102,21 +102,20 @@ class TaskManager extends Component {
     const { array, name, indexArray, indexArrayName } = this.findTaskArrayHandler(status);
     if(array[index].selected === false) {
       array[index].selected = true;
-      this.setState({ [`${indexArrayName}`]: [...indexArray, index], [`${name}`]: array });
+      this.setState({ [indexArrayName]: [...indexArray, index], [name]: array });
     }else{
       array[index].selected = false;
       splice = indexArray.indexOf(index);
       indexArray.splice(splice, 1);
-      this.setState({ [`${indexArrayName}`]: indexArray, [`${name}`]: array });
+      this.setState({ [indexArrayName]: indexArray, [name]: array });
     }
   };
   render() {
     const { taskFormModal, edit, dropValue, unassignedTasks, inprogressTasks, completedTasks, taskDescription }  = this.state;
   /* Layer Logic and declaration  */
-    let newTaskLayer;
-    let editTaskLayer;
+    let taskFormLayer;
     if (taskFormModal) {
-      newTaskLayer = <NewTaskLayer value={dropValue} description={taskDescription} onDropChange={ this.onDropChange } onSubmit={this.onNewTaskSubmit} onChange={this.onTextAreaChange} onClose={this.onClose} onEdit={this.onEditTaskSubmit} edit={edit} />
+      taskFormLayer = <TaskFormLayer value={dropValue} description={taskDescription} onDropChange={ this.onDropChange } onSubmit={this.onNewTaskSubmit} onChange={this.onTextAreaChange} onClose={this.onClose} onEdit={this.onEditTaskSubmit} edit={edit} />
     }
     return(
       <Box
@@ -135,13 +134,14 @@ class TaskManager extends Component {
         >
           <Box direction="row" >
             <Button icon={<Add />} onClick={this.onLayerOpen.bind(this, 'Unassigned', '', '')}></Button>
-            <Button icon={<FormSubtract />} onClick={ this.onDelete.bind(this, 'Unassigned')}></Button>
+            <Button icon={<FormSubtract />} onClick={this.onDelete.bind(this, 'Unassigned')}></Button>
+        {/* Unassigned Tasks and edit button  */}
           </Box>
           {unassignedTasks.map((task, index) => 
             <Box
               key={index}
               selected={task.selected}
-              border={{ "color": `${task.selected ? 'neutral-4' : 'background-1' }`, "size": "medium" }}
+              border={{ "color": `${task.selected ? 'neutral-4' : 'grommet-pink' }`, "size": "medium" }}
               margin="small"
               round="small"
               pad="xsmall"
@@ -151,7 +151,7 @@ class TaskManager extends Component {
             <Box overflow="hidden" fill={true} onClick={this.onTaskSelect.bind(this, index, 'Unassigned')}>
               <Paragraph textAlign="center"> {task.text} </Paragraph>
             </Box>
-              <Button onClick={this.onLayerOpen.bind(this, 'Unassigned', task.text, index)} icon={<FormEdit />}></Button>
+              <Button style={{ padding: 4 }} onClick={this.onLayerOpen.bind(this, 'Unassigned', task.text, index)} icon={<FormEdit />}></Button>
             </Box>
           )}
         </Box>
@@ -166,12 +166,13 @@ class TaskManager extends Component {
             <Button icon={ <Add /> } onClick={this.onLayerOpen.bind(this, 'In Progress', '', '')}>
             </Button>
             <Button icon={<FormSubtract />} onClick={this.onDelete.bind(this, 'In Progress')}></Button>
+        {/* In Progress Tasks and edit button */}
           </Box>
           {inprogressTasks.map((task, index) =>
             <Box
               key={index}
               selected={task.selected}
-              border={{ "color": `${task.selected ? 'neutral-4' : 'background-1' }`, "size": "medium" }}
+              border={{ "color": `${task.selected ? 'neutral-4' : 'grommet-pink' }`, "size": "medium" }}
               margin="small"
               round="small"
               pad="xsmall"
@@ -181,7 +182,7 @@ class TaskManager extends Component {
             <Box fill={true} overflow="hidden" onClick={this.onTaskSelect.bind(this, index, 'In Progress')}>
               <Paragraph textAlign="center">{task.text}</Paragraph>
             </Box>
-              <Button onClick={this.onLayerOpen.bind(this, 'In Progress', task.text, index)} icon={<FormEdit />}></Button>
+              <Button style={{ padding: 4 }} onClick={this.onLayerOpen.bind(this, 'In Progress', task.text, index)} icon={<FormEdit />}></Button>
             </Box>
           )}
         </Box>
@@ -195,12 +196,13 @@ class TaskManager extends Component {
           <Box direction="row">
             <Button icon={<Add />} onClick={ this.onLayerOpen.bind(this, 'Completed', '', '')}></Button>
             <Button icon={<FormSubtract />} onClick={this.onDelete.bind(this, 'Completed')}></Button>
+        {/* Completed Tasks and edit button  */}
           </Box>
           {completedTasks.map((task, index) => 
             <Box
               key={index}
               selected={task.selected}
-              border={{ "color": `${task.selected ? 'neutral-4' : 'background-1' }`, "size": "medium" }}
+              border={{ "color": `${task.selected ? 'neutral-4' : 'grommet-pink' }`, "size": "medium" }}
               margin="small"
               round="small"
               pad="xsmall"
@@ -210,14 +212,13 @@ class TaskManager extends Component {
             <Box fill={true} overflow="hidden" onClick={this.onTaskSelect.bind(this, index, 'Completed')}>
               <Paragraph textAlign="center">{task.text}</Paragraph>
             </Box>
-              <Button onClick={this.onLayerOpen.bind(this, 'Completed', task.text, index)} icon={<FormEdit />}></Button>
+              <Button style={{ padding: 4 }} onClick={this.onLayerOpen.bind(this, 'Completed', task.text, index)} icon={<FormEdit />}></Button>
             </Box>
           )}
         </Box>
         <Box>
       {/* Layers */}
-        {newTaskLayer}
-        {editTaskLayer}
+        {taskFormLayer}
         </Box>
       </Box>
     )
@@ -227,7 +228,7 @@ class TaskManager extends Component {
 export default TaskManager;
 
 /* Task form layer  */
-const NewTaskLayer = ({value, description, onDropChange, onClose, onChange, onSubmit, onEdit, edit }) => (
+const TaskFormLayer = ({value, description, onDropChange, onClose, onChange, onSubmit, onEdit, edit }) => (
 	<Layer
 		position="center"
 		onClickOutside={onClose}
